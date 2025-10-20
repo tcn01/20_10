@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER 20/10</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --neon-pink: #ff00ff;
+            --neon-blue: #00ffff;
+            --neon-purple: #9d00ff;
+            --dark-bg: #0a0a16;
+        }
+
+        body {
+            font-family: 'Orbitron', 'Courier New', monospace;
+            background: var(--dark-bg);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: auto;
+            position: relative;
+            color: white;
+            padding: 20px;
+        }
+
+        .cyber-grid {
+            position: fixed;
+            width: 80%;
+            height: 80%;
+            background: 
+                linear-gradient(rgba(255, 0, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 0, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 70%;
+            min-height: auto;
+            text-align: center;
+            z-index: 10;
+            position: relative;
+            padding: 40px 30px;
+            background: rgba(10, 10, 22, 0.9);
+            border: 1px solid var(--neon-pink);
+            box-shadow: 
+                0 0 30px var(--neon-pink),
+                inset 0 0 30px rgba(255, 0, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 40px; /* Khoảng cách giữa các phần tử con */
+        }
+
+        .header-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* Khoảng cách giữa title và subtitle */
+        }
+
+        .hologram-title {
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px var(--neon-pink);
+            animation: hologram 3s ease-in-out infinite alternate;
+            letter-spacing: 2px;
+            line-height: 1.2;
+        }
+
+        .cyber-subtitle {
+            font-size: clamp(0.9rem, 2vw, 1.3rem);
+            color: var(--neon-blue);
+            text-shadow: 0 0 15px var(--neon-blue);
+            letter-spacing: 1px;
+            line-height: 1.4;
+        }
+
+        .hologram-section {
+            display: flex;
+            flex-direction: column;
+            gap: 30px; /* Khoảng cách giữa các hologram */
+        }
+
+        .hologram-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 40px; /* Khoảng cách giữa các khối hologram */
+        }
+
+        .hologram-character {
+            position: relative;
+            width: clamp(120px, 25vw, 200px);
+            height: clamp(120px, 25vw, 200px);
+            perspective: 1000px;
+            flex-shrink: 0;
+            margin: 10px; /* Thêm margin để tách xa hơn */
+        }
+
+        .hologram {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: hologramRotate 20s linear infinite;
+        }
+
+        .hologram-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px solid var(--neon-blue);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: clamp(2rem, 5vw, 4rem);
+            background: rgba(0, 255, 255, 0.1);
+            box-shadow: 
+                0 0 20px var(--neon-blue),
+                inset 0 0 20px rgba(0, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        .hologram-face.front { transform: rotateY(0deg) translateZ(clamp(60px, 8vw, 100px)); }
+        .hologram-face.back { transform: rotateY(180deg) translateZ(clamp(60px, 8vw, 100px)); }
+        .hologram-face.right { transform: rotateY(90deg) translateZ(clamp(60px, 8vw, 100px)); }
+        .hologram-face.left { transform: rotateY(-90deg) translateZ(clamp(60px, 8vw, 100px)); }
+        .hologram-face.top { transform: rotateX(90deg) translateZ(clamp(60px, 8vw, 100px)); }
+        .hologram-face.bottom { transform: rotateX(-90deg) translateZ(clamp(60px, 8vw, 100px)); }
+
+        .message-section {
+            display: flex;
+            flex-direction: column;
+            gap: 25px; /* Khoảng cách giữa các phần trong message */
+        }
+
+        .cyber-message {
+            background: rgba(255, 0, 255, 0.1);
+            border: 1px solid var(--neon-pink);
+            padding: clamp(20px, 3vw, 35px);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            min-height: auto;
+            margin: 10px 0; /* Thêm margin để tách khỏi các phần khác */
+        }
+
+        .message-text {
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            line-height: 1.5;
+            margin-bottom: 15px; /* Khoảng cách giữa các dòng text */
+            text-shadow: 0 0 10px white;
+            word-wrap: break-word;
+        }
+
+        /* Nơi hiển thị thông điệp đã giải mã: cho phép xuống dòng, bọc từ và giữ gọn trong khung */
+        .decoded-output {
+            font-size: clamp(0.95rem, 2vw, 1.05rem);
+            line-height: 1.5;
+            color: #ffb6db;
+            background: rgba(255, 0, 255, 0.06);
+            border: 1px dashed rgba(255, 0, 255, 0.12);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 12px;
+            white-space: normal; /* cho phép xuống dòng */
+            word-break: break-word;
+            max-height: 240px;
+            overflow: auto; /* nếu quá dài sẽ có scroll */
+        }
+
+        /* Nhãn 'THÔNG ĐIỆP:' trong decoded output - sáng và đậm */
+        .decoded-output .message-label {
+            color: #ffffff; /* sáng hơn */
+            font-weight: 800; /* đậm */
+            text-shadow: 0 0 12px rgba(255, 182, 219, 0.9), 0 0 6px rgba(157,0,255,0.6);
+            margin-right: 8px;
+        }
+
+        .transmission-status {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            border: 1px solid var(--neon-blue);
+            font-size: clamp(0.8rem, 1.5vw, 1rem);
+        }
+
+        .status-bar {
+            height: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            margin: 10px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue));
+            border-radius: 8px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .binary-rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        .binary-digit {
+            position: absolute;
+            color: var(--neon-blue);
+            font-family: monospace;
+            font-size: clamp(10px, 2vw, 14px);
+            animation: binaryFall linear forwards;
+        }
+
+        .button-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* Khoảng cách giữa các nút */
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px; /* Khoảng cách giữa các nút */
+            margin-top: 10px;
+        }
+
+        .cyber-button {
+            background: transparent;
+            border: 2px solid var(--neon-purple);
+            color: var(--neon-purple);
+            padding: clamp(12px, 2vw, 16px) clamp(25px, 3vw, 35px);
+            font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+            font-family: 'Orbitron', 'Courier New', monospace;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            min-width: min-content;
+            margin: 5px; /* Thêm margin cho nút */
+        }
+
+        .cyber-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(157, 0, 255, 0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .cyber-button:hover {
+            box-shadow: 
+                0 0 20px var(--neon-purple),
+                inset 0 0 20px rgba(157, 0, 255, 0.2);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .cyber-button:hover::before {
+            left: 100%;
+        }
+
+        .particles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--neon-blue);
+            border-radius: 50%;
+            animation: particleFloat linear infinite;
+        }
+
+        .transmission-effect {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .transmission-beam {
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            animation: beamMove 2s linear infinite;
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        .transmission-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: var(--neon-pink);
+            text-shadow: 0 0 10px var(--neon-pink);
+            opacity: 0;
+            text-align: center;
+            padding: 0 10px;
+        }
+
+        .scan-line {
+            position: fixed;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+            top: 0;
+            left: 0;
+            animation: scan 3s linear infinite;
+            box-shadow: 0 0 10px var(--neon-blue);
+            z-index: 5;
+        }
+
+        /* Khoảng cách responsive */
+        @media (max-width: 768px) {
+            .container {
+                gap: 30px;
+                padding: 30px 20px;
+            }
+            
+            .hologram-container {
+                gap: 30px;
+            }
+            
+            .button-group {
+                gap: 15px;
+            }
+            
+            .cyber-message {
+                margin: 15px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                gap: 25px;
+                padding: 25px 15px;
+            }
+            
+            .hologram-container {
+                gap: 25px;
+            }
+            
+            .hologram-character {
+                margin: 8px;
+            }
+            
+            .button-group {
+                gap: 12px;
+                flex-direction: column;
+            }
+            
+            .cyber-button {
+                margin: 3px;
+                
+            }
+            
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        @keyframes hologram {
+            0% { filter: hue-rotate(0deg); opacity: 0.8; }
+            100% { filter: hue-rotate(360deg); opacity: 1; }
+        }
+
+        @keyframes hologramRotate {
+            0% { transform: rotateX(0deg) rotateY(0deg); }
+            100% { transform: rotateX(360deg) rotateY(360deg); }
+        }
+
+        @keyframes binaryFall {
+            0% { transform: translateY(-100px); opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+
+        @keyframes particleFloat {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+        }
+
+        @keyframes beamMove {
+            0% { transform: translateY(-50%) translateX(-100%); }
+            100% { transform: translateY(-50%) translateX(100%); }
+        }
+
+        @keyframes scan {
+            0% { top: 0%; }
+            100% { top: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-grid"></div>
+    <div class="scan-line"></div>
+    
+    <div class="container">
+        <div class="header-section">
+            <h1 class="hologram-title">CYBER 20/10</h1>
+            <p class="cyber-subtitle">// HỆ THỐNG ĐỘC LẠ TÂN KỲ XIN CHÀO//</p>
+        </div>
+        
+        <div class="hologram-section">
+            <div class="hologram-container">
+                <div class="hologram-character">
+                    <div class="hologram">
+                        <div class="hologram-face front"><i class="fas fa-robot" style="color: var(--neon-blue);"></i></div>
+                        <div class="hologram-face back"><i class="fas fa-code" style="color: var(--neon-pink);"></i></div>
+                        <div class="hologram-face right"><i class="fas fa-microchip" style="color: var(--neon-purple);"></i></div>
+                        <div class="hologram-face left">20/10</div>
+                        <div class="hologram-face top"><i class="fas fa-heart" style="color: var(--neon-pink);"></i></div>
+                        <div class="hologram-face bottom"><i class="fas fa-star" style="color: var(--neon-blue);"></i></div>
+                    </div>
+                </div>
+                
+                <div class="hologram-character">
+                    <div class="hologram">
+                        <div class="hologram-face front"><i class="fas fa-user-astronaut" style="color: var(--neon-purple);"></i></div>
+                        <div class="hologram-face back"><i class="fas fa-rocket" style="color: var(--neon-blue);"></i></div>
+                        <div class="hologram-face right"><i class="fas fa-infinity" style="color: var(--neon-pink);"></i></div>
+                        <div class="hologram-face left">∞</div>
+                        <div class="hologram-face top"><i class="fas fa-gem" style="color: var(--neon-blue);"></i></div>
+                        <div class="hologram-face bottom"><i class="fas fa-atom" style="color: var(--neon-purple);"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="message-section">
+            <div class="cyber-message">
+                <div class="binary-rain" id="binaryRain"></div>
+                <p class="message-text" style="color: #eb1d62; text-shadow: 0 0 10px #eb1d62; ;
+            word-wrap: break-word;">>> HỆ THỐNG ĐÃ PHÁT HIỆN SỰ HIỆN DIỆN CỦA VẺ ĐẸP HOÀN MỸ <<</p>
+                <p class="message-text">// THÔNG ĐIỆP ĐƯỢC MÃ HÓA: LỜI CHÚC ĐẾN KÝ CHỦ//<p>
+                
+                <!-- Nơi để hiển thị thông điệp đã giải mã thay vì đặt vào text của nút -->
+                <div id="decodedOutput" class="decoded-output" aria-live="polite" hidden></div>
+                <div class="transmission-status" id="transmissionStatus" style="display: none;">
+                    <p>TRẠNG THÁI TRUYỀN TẢI: <span id="statusText">CHUẨN BỊ...</span></p>
+                    <div class="status-bar">
+                        <div class="progress" id="progressBar"></div>
+                    </div>
+                    <p id="progressText">0%</p>
+                </div>
+
+                <div class="transmission-effect" id="transmissionEffect">
+                    <div class="transmission-beam"></div>
+                    <div class="transmission-message" id="transmissionMessage"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="button-section">
+            <div class="button-group">
+                <button class="cyber-button" id="decodeBtn">GIẢI MÃ THÔNG ĐIỆP</button>
+                <button class="cyber-button" id="transmitBtn">TRUYỀN TẢI LỜI CHÚC</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="particles" id="particles"></div>
+
+    <script>
+        // Tạo hiệu ứng mưa binary
+        function createBinaryRain() {
+            const container = document.getElementById('binaryRain');
+            const characters = ['0', '1', '0', '1', '0', '1'];
+            
+            setInterval(() => {
+                const binary = document.createElement('div');
+                binary.className = 'binary-digit';
+                binary.textContent = characters[Math.floor(Math.random() * characters.length)];
+                binary.style.left = Math.random() * 100 + '%';
+                binary.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                binary.style.color = Math.random() > 0.5 ? 'var(--neon-blue)' : 'var(--neon-pink)';
+                
+                container.appendChild(binary);
+                
+                setTimeout(() => {
+                    binary.remove();
+                }, 5000);
+            }, 100);
+        }
+
+        // Tạo hiệu ứng hạt
+        function createParticles() {
+            const container = document.getElementById('particles');
+            
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 10 + 5) + 's';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                particle.style.opacity = Math.random();
+                
+                container.appendChild(particle);
+            }
+        }
+
+        // Hiệu ứng truyền tải lời chúc
+        function startTransmission() {
+            const statusElement = document.getElementById('transmissionStatus');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const statusText = document.getElementById('statusText');
+            const transmissionEffect = document.getElementById('transmissionEffect');
+            const transmissionMessage = document.getElementById('transmissionMessage');
+            
+            // Hiển thị trạng thái truyền tải
+            statusElement.style.display = 'block';
+            
+            // Danh sách lời chúc
+            const messages = [
+                "CHÚC MỪNG NGÀY PHỤ NỮ VIỆT NAM 20/10!",
+                "CHÚC CÁC BẠN LUÔN XINH ĐẸP VÀ RẠNG RỠ!",
+                "THÀNH CÔNG VÀ HẠNH PHÚC SẼ LUÔN ĐỒNG HÀNH CÙNG BẠN!",
+                "BẠN XỨNG ĐÁNG VỚI NHỮNG ĐIỀU TUYỆT VỜI NHẤT!",
+                "MÃI MÃI TỎA SÁNG - MÃI MÃI XINH ĐẸP!"
+            ];
+            
+            let progress = 0;
+            let currentMessage = 0;
+            
+            const transmissionInterval = setInterval(() => {
+                progress += 5;
+                progressBar.style.width = progress + '%';
+                progressText.textContent = progress + '%';
+                
+                // Cập nhật trạng thái
+                if (progress < 25) {
+                    statusText.textContent = "KHỞI TẠO KẾT NỐI...";
+                } else if (progress < 50) {
+                    statusText.textContent = "MÃ HÓA LỜI CHÚC...";
+                } else if (progress < 75) {
+                    statusText.textContent = "TRUYỀN TẢI DỮ LIỆU...";
+                } else {
+                    statusText.textContent = "HOÀN TẤT...";
+                }
+                
+                // Hiển thị lời chúc khi đạt các mốc
+                if (progress === 20 || progress === 40 || progress === 60 || progress === 80) {
+                    transmissionEffect.style.opacity = '1';
+                    transmissionMessage.textContent = messages[currentMessage];
+                    currentMessage = (currentMessage + 1) % messages.length;
+                    
+                    setTimeout(() => {
+                        transmissionEffect.style.opacity = '0';
+                    }, 1500);
+                }
+                
+                // Thêm hiệu ứng hạt
+                if (progress % 10 === 0) {
+                    createTransmissionParticles();
+                }
+                
+                // Kết thúc
+                if (progress >= 100) {
+                    clearInterval(transmissionInterval);
+                    statusText.textContent = "TRUYỀN TẢI THÀNH CÔNG!";
+                    transmissionEffect.style.opacity = '1';
+                    transmissionMessage.textContent = "LỜI CHÚC ĐÃ ĐƯỢC GỬI ĐI!";
+                    
+                    setTimeout(() => {
+                        statusElement.style.display = 'none';
+                        transmissionEffect.style.opacity = '0';
+                        document.getElementById('transmitBtn').textContent = 'TRUYỀN TẢI LỜI CHÚC';
+                        document.getElementById('transmitBtn').style.boxShadow = '';
+                        document.getElementById('transmitBtn').disabled = false;
+                    }, 3000);
+                }
+            }, 200);
+        }
+
+        // Tạo hạt cho hiệu ứng truyền tải
+        function createTransmissionParticles() {
+            const container = document.getElementById('particles');
+            
+            for (let i = 0; i < 8; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = '50%';
+                particle.style.top = '50%';
+                particle.style.animationDuration = '1s';
+                particle.style.background = Math.random() > 0.5 ? 'var(--neon-pink)' : 'var(--neon-blue)';
+                particle.style.width = '4px';
+                particle.style.height = '4px';
+                
+                container.appendChild(particle);
+                
+                setTimeout(() => {
+                    particle.remove();
+                }, 1000);
+            }
+        }
+
+        // Xử lý sự kiện nút
+        document.getElementById('decodeBtn').addEventListener('click', function() {
+            const btn = this;
+            const output = document.getElementById('decodedOutput');
+            btn.textContent = 'ĐANG GIẢI MÃ...';
+            btn.style.boxShadow = '0 0 30px var(--neon-blue)';
+            btn.disabled = true;
+            output.hidden = true;
+            output.textContent = '';
+
+            setTimeout(() => {
+                const message = `<span class="message-label">THÔNG ĐIỆP:</span> Nhân ngày 20/10, chúc cậu luôn giữ được nụ cười tươi, trái tim ấm áp và niềm tin vững vàng trên mỗi chặng đường. Dù cuộc sống có thế nào, mong cậu vẫn sẽ là phiên bản rực rỡ và hạnh phúc nhất của chính mình 💖`;
+                output.innerHTML = message;
+                output.hidden = false;
+                // Nếu cần, scroll đến output
+                output.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+                setTimeout(() => {
+                    btn.textContent = 'GIẢI MÃ THÔNG ĐIỆP';
+                    btn.style.boxShadow = '';
+                    btn.disabled = false;
+                }, 3000);
+            }, 1200);
+        });
+
+        document.getElementById('transmitBtn').addEventListener('click', function() {
+            this.textContent = 'ĐANG TRUYỀN TẢI...';
+            this.style.boxShadow = '0 0 30px var(--neon-pink)';
+            this.disabled = true;
+            
+            startTransmission();
+        });
+
+        // Khởi tạo
+        window.onload = function() {
+            createBinaryRain();
+            createParticles();
+        };
+    </script>
+</body>
+</html>
